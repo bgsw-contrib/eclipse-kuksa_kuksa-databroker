@@ -43,9 +43,11 @@
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#starting-databroker">Starting Databroker</a></li>
         <li><a href="#reading-and-writing-vss-data-using-the-cli">Reading and writing VSS data using the CLI</a></li>
+      </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#building">Building</a></li>
+    <li><a href="#providers">Providers</a></li>
     <li><a href="#performance">Performance</a></li>
     <li><a href="#additional-documentation">Additional Documentation</a></li>
     <li><a href="#contributing">Contributing</a></li>
@@ -314,6 +316,45 @@ cargo build --bins --release
 ```shell
 # in ${WORKSPACE}
 cargo test --all-targets
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Providers
+
+Providers connect Kuksa Databroker's VSS data model to vehicle middleware and ECUs. They publish sensor values to Databroker and receive actuator requests from Kuksa clients, translating between VSS paths and the transport-specific services, events, and payloads used by the vehicle platform.
+
+The optional [`mw_com_provider`](mw_com_provider/README.md) integrates S-Core `mw::com` services through the LoLa runtime. It is packaged with `databroker-mw-com`, a composition binary that runs Databroker and the provider in one process. The default reference configuration exposes vehicle-dynamics signals, including `Vehicle.Speed` and `Vehicle.ADAS.CruiseControl.TargetSpeed`.
+
+For the required S-Core checkout layout, configuration, and troubleshooting, see the [S-Core integration guide](mw_com_provider/docs/s-core-integration.md).
+
+### Run the S-Core `mw::com` Provider Demo
+
+The demo requires sibling `communication` and `baselibs` S-Core checkouts beneath `<integration-root>`. First, build and start the reference S-Core vehicle-dynamics application:
+
+```sh
+cd <integration-root>/communication
+bazel build //score/mw/com/example/vehicle-dynamics-example:vehicle-dynamics-example
+export SCORE_COM_BAZEL_BIN="$(bazel info bazel-bin)"
+export SCORE_COM_LINK_PARAMS="$(find "$SCORE_COM_BAZEL_BIN" -name 'vehicle-dynamics-example-0.params' | head -n 1)"
+rm -rf /tmp/mw_com_lola
+bazel run //score/mw/com/example/vehicle-dynamics-example:vehicle-dynamics-example -- --run-mode both
+```
+
+In a second terminal, start Databroker with the in-process provider. Substitute the exported values from the first terminal:
+
+```sh
+cd <integration-root>/kuksa-databroker
+SCORE_COM_BAZEL_BIN=<bazel-bin-path> \
+SCORE_COM_LINK_PARAMS=<link-params-path> \
+cargo run -p databroker-mw-com
+```
+
+The composition binary serves Kuksa `val.v1` and `val.v2` gRPC APIs at `127.0.0.1:55555` by default. In a third terminal, actuate the reference target-speed signal:
+
+```sh
+cd <integration-root>/kuksa-databroker
+cargo run -p databroker-cli -- actuate Vehicle.ADAS.CruiseControl.TargetSpeed 88.0
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
