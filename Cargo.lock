@@ -12,6 +12,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "allocator"
+version = "0.0.1"
+dependencies = [
+ "score_log",
+]
+
+[[package]]
 name = "allocator-api2"
 version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -338,6 +345,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "bridge_ffi_lola"
+version = "0.1.0"
+dependencies = [
+ "bridge_ffi_rs",
+ "sample_ptr_rs",
+ "score_log",
+]
+
+[[package]]
+name = "bridge_ffi_rs"
+version = "0.1.0"
+dependencies = [
+ "sample_ptr_rs",
+]
+
+[[package]]
 name = "bstr"
 version = "1.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -467,6 +490,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
+name = "com-api-runtime-lola"
+version = "0.1.0"
+dependencies = [
+ "bridge_ffi_lola",
+ "bridge_ffi_rs",
+ "futures",
+ "sample_allocatee_ptr_rs",
+ "sample_ptr_rs",
+ "score_com_concept",
+ "score_log",
+]
+
+[[package]]
+name = "common_rs"
+version = "0.1.0"
+dependencies = [
+ "libc",
+]
+
+[[package]]
 name = "console"
 version = "0.15.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -490,6 +533,14 @@ name = "constant_time_eq"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "245097e9a4535ee1e3e3931fcfcd55a796a44c643e8596ff6566d68f09b87bbc"
+
+[[package]]
+name = "containers"
+version = "0.0.1"
+dependencies = [
+ "allocator",
+ "score_log",
+]
 
 [[package]]
 name = "core-foundation-sys"
@@ -776,6 +827,16 @@ dependencies = [
  "tokio-stream",
  "tonic",
  "tonic-prost",
+]
+
+[[package]]
+name = "databroker-mw-com"
+version = "0.1.0"
+dependencies = [
+ "databroker",
+ "mw_com_provider",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]
@@ -2995,6 +3056,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d87ecb2933e8aeadb3e3a02b828fed80a7528047e68b4f424523a0981a3a084"
 
 [[package]]
+name = "mw_com_provider"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "databroker",
+ "databroker-proto",
+ "score_com",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
 name = "nix"
 version = "0.26.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3231,6 +3308,18 @@ dependencies = [
  "smallvec",
  "windows-link",
 ]
+
+[[package]]
+name = "paste"
+version = "1.0.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
+
+[[package]]
+name = "pastey"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "35fb2e5f958ec131621fdd531e9fc186ed768cbe395337403ae56c17a74c68ec"
 
 [[package]]
 name = "peg"
@@ -3813,10 +3902,76 @@ dependencies = [
 ]
 
 [[package]]
+name = "sample_allocatee_ptr_rs"
+version = "0.1.0"
+dependencies = [
+ "common_rs",
+]
+
+[[package]]
+name = "sample_ptr_rs"
+version = "0.1.0"
+dependencies = [
+ "common_rs",
+ "libc",
+]
+
+[[package]]
 name = "scopeguard"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
+
+[[package]]
+name = "score_com"
+version = "0.1.0"
+dependencies = [
+ "com-api-runtime-lola",
+ "score_com_concept",
+]
+
+[[package]]
+name = "score_com_concept"
+version = "0.1.0"
+dependencies = [
+ "containers",
+ "futures",
+ "paste",
+ "pastey",
+ "score_com_macros",
+ "score_log",
+ "thiserror 2.0.20",
+]
+
+[[package]]
+name = "score_com_macros"
+version = "0.1.0"
+dependencies = [
+ "quote",
+ "syn 2.0.119",
+]
+
+[[package]]
+name = "score_log"
+version = "0.0.1"
+dependencies = [
+ "score_log_fmt",
+ "score_log_fmt_macro",
+]
+
+[[package]]
+name = "score_log_fmt"
+version = "0.0.1"
+
+[[package]]
+name = "score_log_fmt_macro"
+version = "0.0.1"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "score_log_fmt",
+ "syn 2.0.119",
+]
 
 [[package]]
 name = "sd-notify"

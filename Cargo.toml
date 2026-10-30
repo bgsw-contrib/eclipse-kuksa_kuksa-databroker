@@ -19,10 +19,14 @@ members = [
     "databroker",
     "databroker-proto",
     "databroker-cli",
+    "databroker-mw-com",
+    "mw_com_provider",
 ]
 
 exclude = [
-   "lib/*"
+   "lib/*",
+   "mw_com_provider/score_com_cargo/*",
+   "mw_com_provider/xtask",
 ]
 
 [workspace.dependencies]
